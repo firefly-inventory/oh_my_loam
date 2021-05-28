@@ -12,9 +12,28 @@ Comparing with A-LOAM, this implementation has following features:
 <img src="images/nsh_indoor_outdoor.png" alt="nsh_indoor_outdoor" height="500" align="bottom" />
 
 # How to run
+
+## Docker
+
+Build image
+```
+docker build -t oh_my_loam .
+```
+
+Run image
+```
+docker run -v /path/to/oh_my_loam/configs:/usr/src/configs \
+           -v /path/to/input_folder:/usr/src/input_folder \
+           -v /path/to/output_folder:/usr/src/output_folder \
+           -e CONFIG=/usr/src/configs/config_nsh_indoor_outdoor.yaml \
+           -e INPUT_FOLDER=/usr/src/input_folder \
+           -e OUTPUT_FOLDER=/usr/src/output_folder \
+           oh_my_loam
+```
+
 ## BUILD
 
-Install dependences (listed below).\
+Install dependencies (listed below).\
 Clone this repository\
 Compile: 
 ```bash

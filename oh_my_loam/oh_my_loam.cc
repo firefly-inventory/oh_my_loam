@@ -1,6 +1,7 @@
 #include "oh_my_loam.h"
 
 #include <vector>
+#include <pcl/io/pcd_io.h>
 
 #include "common/pcl/pcl_utils.h"
 #include "common/registerer/registerer.h"
@@ -44,7 +45,7 @@ void OhMyLoam::Reset() {
   mapper_->Reset();
 }
 
-void OhMyLoam::Run(double timestamp,
+std::shared_ptr<OhmyloamVisFrame> OhMyLoam::Run(double timestamp,
                    const common::PointCloudConstPtr &cloud_in) {
   common::PointCloudPtr cloud(new common::PointCloud);
   RemoveOutliers(*cloud_in, cloud.get());
@@ -60,9 +61,10 @@ void OhMyLoam::Run(double timestamp,
   if (is_vis_) {
     Visualize(pose_curr2map, cloud_corn, cloud_surf, timestamp);
   }
+  return GetFrame(pose_curr2map, cloud_corn, cloud_surf, timestamp);
 }
 
-void OhMyLoam::Visualize(const common::Pose3d &pose_curr2map,
+std::shared_ptr<OhmyloamVisFrame> OhMyLoam::GetFrame(const common::Pose3d &pose_curr2map,
                          const TPointCloudConstPtr &cloud_corn,
                          const TPointCloudConstPtr &cloud_surf,
                          double timestamp) {
@@ -73,6 +75,14 @@ void OhMyLoam::Visualize(const common::Pose3d &pose_curr2map,
   frame->cloud_corn = cloud_corn;
   frame->cloud_surf = cloud_surf;
   frame->pose_map = pose_curr2map;
+  return frame;
+}
+
+void OhMyLoam::Visualize(const common::Pose3d &pose_curr2map,
+                         const TPointCloudConstPtr &cloud_corn,
+                         const TPointCloudConstPtr &cloud_surf,
+                         double timestamp) {
+  auto frame = GetFrame(pose_curr2map, cloud_corn, cloud_surf, timestamp);
   visualizer_->Render(frame);
 }
 

@@ -16,12 +16,16 @@ class OhMyLoam {
 
   bool Init();
 
-  void Run(double timestamp, const common::PointCloudConstPtr &cloud_in);
+  std::shared_ptr<OhmyloamVisFrame> Run(double timestamp, const common::PointCloudConstPtr &cloud_in);
 
  private:
   void Reset();
 
   void Visualize(const common::Pose3d &pose_curr2map,
+                 const TPointCloudConstPtr &cloud_corn,
+                 const TPointCloudConstPtr &cloud_surf, double timestamp = 0.0);
+
+  std::shared_ptr<OhmyloamVisFrame> GetFrame(const common::Pose3d &pose_curr2map,
                  const TPointCloudConstPtr &cloud_corn,
                  const TPointCloudConstPtr &cloud_surf, double timestamp = 0.0);
 
